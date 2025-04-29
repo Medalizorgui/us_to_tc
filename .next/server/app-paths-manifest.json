@@ -1,7 +1,13 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/projects/route": "app/api/projects/route.js",
+  "/api/test-suites/[id]/route": "app/api/test-suites/[id]/route.js",
   "/api/test-suites/route": "app/api/test-suites/route.js",
+  "/api/user-stories/route": "app/api/user-stories/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/projects/[id]/test-suites/create/page": "app/projects/[id]/test-suites/create/page.js",
-  "/projects/[id]/test-suites/page": "app/projects/[id]/test-suites/page.js"
+  "/page": "app/page.js",
+  "/projects/[id]/page": "app/projects/[id]/page.js",
+  "/projects/[id]/test-suites/[testSuiteId]/page": "app/projects/[id]/test-suites/[testSuiteId]/page.js",
+  "/projects/[id]/test-suites/page": "app/projects/[id]/test-suites/page.js",
+  "/projects/[id]/userstories/page": "app/projects/[id]/userstories/page.js"
 }

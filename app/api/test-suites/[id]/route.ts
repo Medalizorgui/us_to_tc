@@ -42,18 +42,23 @@ export async function PUT(
   try {
     const { id } = await context.params
     const body = await request.json()
-    const { name, parent_suite_id, details } = body
+    const { name, details } = body
+
+    if (!name) {
+      return NextResponse.json(
+        { error: "Name is required" },
+        { status: 400 }
+      )
+    }
 
     const client = await pool.connect()
     try {
       const result = await client.query(
         `UPDATE test_suites 
-         SET name = $1,
-             parent_suite_id = $2,
-             details = $3
-         WHERE id = $4
+         SET name = $1, details = $2
+         WHERE id = $3
          RETURNING *`,
-        [name, parent_suite_id || null, details || null, id]
+        [name, details || null, id]
       )
 
       if (result.rows.length === 0) {
