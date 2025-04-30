@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const projectId = searchParams.get('project_id')
+    const includeChildren = searchParams.get('include_children') === 'true'
 
     if (!projectId) {
       return NextResponse.json(
@@ -15,12 +16,15 @@ export async function GET(request: Request) {
 
     const client = await pool.connect()
     try {
-      const result = await client.query(
-        `SELECT * FROM test_suites 
-         WHERE project_id = $1
-         ORDER BY created_at DESC`,
-        [projectId]
-      )
+      const query = includeChildren
+        ? `SELECT * FROM test_suites 
+           WHERE project_id = $1
+           ORDER BY created_at DESC`
+        : `SELECT * FROM test_suites 
+           WHERE project_id = $1 AND parent_suite_id IS NULL
+           ORDER BY created_at DESC`
+
+      const result = await client.query(query, [projectId])
 
       return NextResponse.json(result.rows)
     } finally {

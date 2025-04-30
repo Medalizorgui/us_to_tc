@@ -108,6 +108,7 @@ async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
         const projectId = searchParams.get('project_id');
+        const includeChildren = searchParams.get('include_children') === 'true';
         if (!projectId) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 error: "Project ID is required"
@@ -117,9 +118,12 @@ async function GET(request) {
         }
         const client = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].connect();
         try {
-            const result = await client.query(`SELECT * FROM test_suites 
-         WHERE project_id = $1
-         ORDER BY created_at DESC`, [
+            const query = includeChildren ? `SELECT * FROM test_suites 
+           WHERE project_id = $1
+           ORDER BY created_at DESC` : `SELECT * FROM test_suites 
+           WHERE project_id = $1 AND parent_suite_id IS NULL
+           ORDER BY created_at DESC`;
+            const result = await client.query(query, [
                 projectId
             ]);
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json(result.rows);
